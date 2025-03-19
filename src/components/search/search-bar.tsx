@@ -4,8 +4,8 @@
 import React from 'react';
 
 // Components
-import { Button } from './ui/button';
-import ButtonGroup from './generals/button-group';
+import { Button } from '../ui/button';
+import ButtonGroup from '../generals/button-group';
 
 // Iconst
 import { Search, X } from 'lucide-react';
@@ -28,9 +28,13 @@ export default function SearchBar() {
         setTotal,
     } = useSearchBar();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setQuery(`${e.target}`)
+
+        const formData = new FormData(e.currentTarget);
+        const query = formData.get("query") as string;
+        
+        setQuery(`${query}`)
     };
 
     const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +61,7 @@ export default function SearchBar() {
                         type="text"
                         value={query}
                         onChange={handleChangeInput}
+                        name="query"
                         placeholder="Search for movies, TV shows..."
                         className="flex-1 bg-transparent border-none outline-none md:px-3 placeholder:text-muted-foreground/70 text-foreground"
                     />
