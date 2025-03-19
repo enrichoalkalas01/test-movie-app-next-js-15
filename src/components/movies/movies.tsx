@@ -27,11 +27,12 @@ export default function Movies() {
         yearsMovieAvailable,
         yearsSelected,
         typeSelected,
+        total,
+        setTotal,
     } = useSearchBar()
 
     const debouncedQuery = useDebounce(query, 500);
     const [datas, setDatas] = useState<IMovieList[]>([]);
-    const [total, setTotal] = useState<number>(0)
 
     // Fetch Data
     const {

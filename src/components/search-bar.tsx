@@ -25,6 +25,7 @@ export default function SearchBar() {
         setYearsMovieAvailable,
         setTypeSelected,
         setYearsSelected,
+        setTotal,
     } = useSearchBar();
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -38,6 +39,7 @@ export default function SearchBar() {
         setYearsMovieAvailable([])
         setTypeSelected("")
         setYearsSelected("")
+        setTotal(0)
     }
 
     const clearSearch = () => setQuery('');
