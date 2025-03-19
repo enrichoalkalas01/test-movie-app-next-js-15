@@ -18,17 +18,11 @@ import { DataResponseFetcher } from "@/lib/interfaces"
 import { fetcher } from "@/lib/fetcher"
 
 export default function FeaturedSlider() {
-
     // Fetch Data
     const { data, error, isLoading } = useQuery<DataResponseFetcher>({
         queryKey: ["featured-movies"],
-        queryFn: () => fetcher<DataResponseFetcher>("/api/movies?search=james bond"), // Cache selama 60 detik
-        // staleTime: 60 * 1000, // 60 detik sebelum di-fetch ulang
-        // gcTime: 5 * 60 * 1000, // Data disimpan selama 5 menit
+        queryFn: () => fetcher<DataResponseFetcher>("/api/movies?search=james bond"),
     });
-
-    console.log(data?.data, isLoading)
-    console.log(error)
 
     return(
         <>

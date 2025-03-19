@@ -20,15 +20,9 @@ export default async function handler(
 }
 
 const GetListMovies = async ({ req, res }: IPropsHandlerApi) => {
-    const { search, page = 1, year } = req.query;
+    const { id } = req.query;
     try {
-        const Query = search || "avengers";
-        let Url = `https://www.omdbapi.com/?apikey=be4d5abe&s=${Query}&page=${page}`;
-
-        if (year) {
-            Url += `&y=${year}`;
-        }
-
+        let Url = `https://www.omdbapi.com/?apikey=be4d5abe&i=${id}&plot=full`;
         const datas = await fetch(Url)
             .then((response) => response.json())
             .catch(() => null);
@@ -36,8 +30,7 @@ const GetListMovies = async ({ req, res }: IPropsHandlerApi) => {
         ResponseHandlerSuccess({
             req: req,
             res: res,
-            data: datas?.Search || null,
-            total: datas?.totalResults || 0,
+            data: datas || null,
         });
     } catch (error: unknown) {
         let errorMessage = "Something went wrong";
