@@ -1,18 +1,16 @@
 "use client"
 
 // Library
-import React, { useState } from 'react';
-import lodash from "lodash"
+import React from 'react';
 
 // Components
 import { Button } from './ui/button';
 import ButtonGroup from './generals/button-group';
 
 // Iconst
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 
 // Supports
-import { cn } from '@/lib/utils';
 import { useSearchBar } from '@/store/search-bar';
 
 // Interface
@@ -34,7 +32,7 @@ export default function SearchBar() {
         setQuery(`${e.target}`)
     };
 
-    const handleChangeInput = (e: any) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value)
         setTypeMovieAvailable([])
         setYearsMovieAvailable([])
