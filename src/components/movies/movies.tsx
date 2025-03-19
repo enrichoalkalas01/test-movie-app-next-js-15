@@ -14,7 +14,7 @@ import { useSearchBar } from "@/store/search-bar";
 import { useDebounce } from "@/hooks/use-debounce";
 
 // Interfaces
-import { DataResponseFetcher, IMovieList, IPropsSelect } from "@/lib/interfaces";
+import { DataResponseFetcher, IMovieList } from "@/lib/interfaces";
 
 import MoviesItems from "@/components/movies/movies-items";
 
@@ -28,6 +28,7 @@ export default function Movies() {
         yearsSelected,
         typeSelected,
     } = useSearchBar()
+
     const debouncedQuery = useDebounce(query, 500);
     const [datas, setDatas] = useState<IMovieList[]>([]);
     const [total, setTotal] = useState<number>(0)
@@ -56,8 +57,8 @@ export default function Movies() {
         if (data?.pages) {
             if ( query ) {
                 if ( !typeMovieAvailable || typeMovieAvailable?.length === 0 ) {
-                    const uniqueTypes = [...new Set(data.pages[0].data.map((item: any) => item.Type))];    
-                    const mappedTypes = uniqueTypes.map((e: IPropsSelect) => {
+                    const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];    
+                    const mappedTypes = uniqueTypes.map((e) => {
                         return { label: `${e}`, value: `${e}` }
                     })
     
@@ -65,8 +66,8 @@ export default function Movies() {
                 }
                 
                 if ( !yearsMovieAvailable || yearsMovieAvailable?.length === 0 ) {
-                    const uniqueYears = [...new Set(data.pages[0].data.map((item: any) => item.Year))];
-                    const mappedYears = uniqueYears.map((e: IPropsSelect) => {
+                    const uniqueYears = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Year))];
+                    const mappedYears = uniqueYears.map((e) => {
                         return { label: `${e}`, value: `${e}` }
                     })
                     
@@ -74,13 +75,17 @@ export default function Movies() {
                 }   
             }
 
-            let MappedData = data.pages.flatMap((page) => page.data)
-            let Total = data.pages.flatMap((page) => page.total)
+            const MappedData = data.pages.flatMap((page) => page.data)
+            const Total = data.pages.flatMap((page) => page.total)
 
             setTotal(Number(Total) || 0);
             setDatas(MappedData);
         }
     }, [data]);
+
+    useEffect(() => {
+        
+    }, [query, setTypeMovieAvailable, setYearsMovieAvailable, typeMovieAvailable, yearsMovieAvailable]);
 
     return (
         <>
