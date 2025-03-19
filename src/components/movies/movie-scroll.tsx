@@ -13,7 +13,7 @@ import { fetcher } from "@/lib/fetcher";
 // Interfaces
 import { DataResponseFetcher, IMovieList } from "@/lib/interfaces";
 
-import MoviesItems from "@/components/movies-items";
+import MoviesItems from "@/components/movies/movies-items";
 
 export default function MoviesScroll() {
     const [datas, setDatas] = useState<IMovieList[]>([]);

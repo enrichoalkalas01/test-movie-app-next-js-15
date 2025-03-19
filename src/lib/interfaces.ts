@@ -23,3 +23,8 @@ export interface IMovieList {
     Type?: string;
     Poster?: string;
 }
+
+export interface IPropsSelect {
+    value?: string;
+    label?: string;
+}

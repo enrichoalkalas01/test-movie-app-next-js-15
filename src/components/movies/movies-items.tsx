@@ -35,7 +35,7 @@ export default function MoviesItems({
                                 {data.Year}
                             </div>
                         </div>
-                        <div className="w-full rounded absolute bottom-0 text-center py-4 px-6 group-hover:text-yellow-400 bg-gradient-to-b from-transparent to-black duration-250 ease-in-out font-semibold">
+                        <div className="w-full rounded absolute bottom-0 text-center py-4 px-6 text-white group-hover:text-yellow-400 bg-gradient-to-b from-transparent to-black duration-250 ease-in-out font-semibold">
                             <span className="shadow-md">{data.Title}</span>
                         </div>
                     </div>

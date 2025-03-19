@@ -20,13 +20,17 @@ export default async function handler(
 }
 
 const GetListMovies = async ({ req, res }: IPropsHandlerApi) => {
-    const { search, page = 1, year } = req.query;
+    const { search, page = 1, year, type } = req.query;
     try {
         const Query = search || "avengers";
         let Url = `https://www.omdbapi.com/?apikey=be4d5abe&s=${Query}&page=${page}`;
 
         if (year) {
             Url += `&y=${year}`;
+        }
+
+        if (type) {
+            Url += `&type=${type}`
         }
 
         const datas: Record<string, unknown> = await fetch(Url)
