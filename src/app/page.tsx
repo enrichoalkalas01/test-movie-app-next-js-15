@@ -23,23 +23,16 @@ export default function Home() {
         <>
             <section
                 className={cn(
-                    "w-full min-h-screen max-w-5xl mx-auto px-4 py-4",
+                    "w-full min-h-screen max-w-5xl mx-auto lg:px-4 lg:py-4",
                 )}
             >
                 <div className="w-full">
                     <Navbar />
                 </div>
-                <div className="w-full pt-8 pb-0">
+                <div className="w-full lg:pt-8 pb-0">
                     <FeaturedMovies />
                 </div>
                 <div className="w-full px-4 mb-4 pt-12 flex justify-center items-center gap-4">
-                    {/* <Input className="rounded" />
-                    <Button
-                        className="cursor-pointer rounded text-sm uppercase"
-                        variant="secondary"
-                    >
-                        Search
-                    </Button> */}
                     <section className="w-full" id="search">
                         <div className="container mx-auto">
                             <div className="text-center mb-10 animate-fade-in">
@@ -55,14 +48,13 @@ export default function Home() {
                             </div>
                         
                             <SearchBar />
-                        {/* <MasonryGrid /> */}
                         </div>
                     </section>
                 </div>
                 <div className="w-full">
                     <Movies />
                 </div>
-                <div className="w-full">
+                <div className="w-full px-4 md:px-0">
                     <NewsLetter />
                 </div>
                 <div className="w-full">
