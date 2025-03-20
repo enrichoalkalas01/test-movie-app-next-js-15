@@ -9,7 +9,7 @@ export function LoadingComponent({ type, propsIcon }: ILoadingComponent) {
     return (
         <>
             {type === "full" && (
-                <div className="w-auto flex justify-center items-center">
+                <div className="w-auto flex justify-center items-center gap-2">
                     <LoaderCircleIcon
                         className="-ms-1 animate-spin"
                         size={16}

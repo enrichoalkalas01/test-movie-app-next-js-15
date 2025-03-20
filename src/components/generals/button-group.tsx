@@ -13,7 +13,7 @@ interface IPropsSelect {
 
 export default function ButtonGroup({ datas = [], propsToggle }: IButtonGroup) {
     return (
-        <ToggleGroup variant="outline" className="inline-flex" type="single" {...propsToggle}>
+        <ToggleGroup variant="outline" className="w-full inline-flex flex-wrap gap-y-2 md:gap-0" type="single" {...propsToggle}>
             {
                 datas?.map((e: IPropsSelect) => {
                     return(

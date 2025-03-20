@@ -7,6 +7,9 @@ import ProviderTanstackQuery from "@/lib/providers/providers-react-query";
 // import ProvidersNextAuth from "@/lib/providers/providers-next-auth";
 import ProvidersToaster from "@/lib/providers/providers-toaster";
 
+import Navbar from "@/components/headers/navbar";
+import Footer from "@/components/headers/footer";
+
 import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -39,11 +42,18 @@ export default function RootLayout({
                     <ProvidersToaster>
                         <section
                             className={cn(
-                                "w-full h-auto shadow-md"
-                                // "bg-gray-800"
+                                "w-full min-h-screen max-w-5xl mx-auto lg:px-4 lg:py-4",
                             )}
                         >
-                            {children}
+                            <div className="w-full">
+                                <Navbar />
+                            </div>
+                            <section className="w-full">
+                                {children}
+                            </section>
+                            <div className="w-full">
+                                <Footer />
+                            </div>
                         </section>
                     </ProvidersToaster>
                 </ProviderTanstackQuery>

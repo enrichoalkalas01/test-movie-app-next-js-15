@@ -17,6 +17,9 @@ interface IUseSearchBar {
 
     yearsSelected: string;
     setYearsSelected: (value: string) => void;
+
+    total: number;
+    setTotal: (value: number) => void;
 }
 
 export const useSearchBar = create<IUseSearchBar>((set) => {
@@ -35,5 +38,8 @@ export const useSearchBar = create<IUseSearchBar>((set) => {
 
         yearsSelected: "",
         setYearsSelected: (value: string) => set({ yearsSelected: value }),
+
+        total: 0,
+        setTotal: (value: number) => set({ total: value })
     };
 });
