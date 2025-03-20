@@ -11,16 +11,6 @@ interface IMovieDetailPage {
 }
 
 export default function MovieDetail({ data }: IMovieDetailPage) {
-    const movie = {
-        title: "Alice Through the Looking Glass",
-        year: 2016,
-        runtime: "1h 23 min",
-        genres: ["Family", "Fantasy"],
-        rating: 6.5,
-        description: "Alice returns to the magical world of Underland, only to find the Hatter in a horrible state. With the help of her friends, Alice must travel through time to save the Mad Hatter and Underland's fate from the evil clutches of the Red Queen and a clock like creature, known as Time.",
-        posterUrl: "https://example.com/alice-poster.jpg" // This would be replaced with a real image URL
-    };
-
     return (
         <>
             <div className="relative w-full">
@@ -35,9 +25,10 @@ export default function MovieDetail({ data }: IMovieDetailPage) {
                                     src={data.Poster !== "N/A" ? data.Poster : "/image.png"} 
                                     alt={`${data.Title} poster`}
                                     className="w-full rounded-lg shadow-lg"
-                                    onError={(e: any) => {
-                                        e.target.onerror = null;
-                                        e.target.src = "/image.png";
+                                    onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                        const target = e.currentTarget;
+                                        target.onerror = null;
+                                        target.src = "/image.png";
                                     }}
                                 />
                             ) : (

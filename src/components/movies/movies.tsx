@@ -86,7 +86,7 @@ export default function Movies() {
 
     useEffect(() => {
         
-    }, [query, setTypeMovieAvailable, setYearsMovieAvailable, typeMovieAvailable, yearsMovieAvailable]);
+    }, [query, typeMovieAvailable, yearsMovieAvailable]);
 
     return (
         <>

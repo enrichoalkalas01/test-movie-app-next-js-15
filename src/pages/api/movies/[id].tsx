@@ -22,7 +22,7 @@ export default async function handler(
 const GetListMovies = async ({ req, res }: IPropsHandlerApi) => {
     const { id } = req.query;
     try {
-        let Url = `https://www.omdbapi.com/?apikey=be4d5abe&i=${id}&plot=full`;
+        const Url = `https://www.omdbapi.com/?apikey=be4d5abe&i=${id}&plot=full`;
         const datas = await fetch(Url)
             .then((response) => response.json())
             .catch(() => null);

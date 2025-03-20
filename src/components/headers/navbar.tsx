@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
 import Login from '../authemtication/login';
@@ -13,7 +13,7 @@ import { useAuthStore } from '@/store/auth-store';
 
 const Navbar = () => {
     const { setStatusDialog } = useDialogStore()
-    const { authStatus, userData } = useAuthStore()
+    const { authStatus } = useAuthStore()
 
     const [isOpen, setIsOpen] = useState(false);
 

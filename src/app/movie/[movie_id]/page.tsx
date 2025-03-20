@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { DataResponseFetcher, IMovieDetail } from "@/lib/interfaces";
+import { IMovieDetail } from "@/lib/interfaces";
 import { fetcher } from "@/lib/fetcher";
 
 import MovieDetail from "@/components/movies/movie-detail";

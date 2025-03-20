@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import {
     Dialog,
     DialogContent,
@@ -9,15 +8,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
-    DialogClose,
     DialogOverlay,
     DialogPortal
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-import { X } from "lucide-react"
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
