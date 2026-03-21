@@ -99,12 +99,12 @@ autoscaling:
     targetMemoryUtilizationPercentage: 80
 
 # Environment Variables
-env: []
-# env:
-#     - name: ENVIRONMENT
-#       value: "production"
-#     - name: APP_NAME
-#       value: sharing-vision-golang
+# env: []
+env:
+    - name: ENVIRONMENT
+      value: "production"
+    - name: OMDB_API_KEY
+      value: "be4d5abe"
 
 # Environment from ConfigMap/Secret
 envFrom: []
