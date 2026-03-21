@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Film, Loader2 } from "lucide-react";
 
-import { LoadingComponent } from "@/components/generals/loading";
 import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -52,25 +51,21 @@ export default function Movies() {
     });
 
     useEffect(() => {
-        if (data?.pages) {
-            if (query) {
-                if (!typeMovieAvailable || typeMovieAvailable.length === 0) {
-                    const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];
-                    setTypeMovieAvailable(uniqueTypes.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
-                }
+        if (!data?.pages) return;
 
-                if (!yearsMovieAvailable || yearsMovieAvailable.length === 0) {
-                    const uniqueYears = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Year))];
-                    setYearsMovieAvailable(uniqueYears.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
-                }
-            }
-
-            const mapped = data.pages.flatMap((page) => page.data);
-            const totalVal = data.pages[0]?.total ?? 0;
-
-            setTotal(Number(totalVal) || 0);
-            setDatas(mapped);
+        if (query && typeMovieAvailable.length === 0) {
+            const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];
+            setTypeMovieAvailable(uniqueTypes.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
         }
+
+        if (query && yearsMovieAvailable.length === 0) {
+            const uniqueYears = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Year))];
+            setYearsMovieAvailable(uniqueYears.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
+        }
+
+        setTotal(Number(data.pages[0]?.total) || 0);
+        setDatas(data.pages.flatMap((page) => page.data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     return (
