@@ -32,7 +32,7 @@ service:
     type: NodePort # Ganti ke ClusterIP karena pakai Ingress
     port: 3000
     targetPort: 3000
-    nodePort: 30202 # hanya untuk NodePort (range: 30000-32767)
+    nodePort: 30203 # hanya untuk NodePort (range: 30000-32767)
 
 # Ingress Configuration
 # ingress:
