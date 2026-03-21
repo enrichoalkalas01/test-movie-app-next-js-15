@@ -1,21 +1,18 @@
 "use client";
 
-// Library
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Film, Loader2 } from "lucide-react";
 
-// Components
 import { LoadingComponent } from "@/components/generals/loading";
 import { Button } from "../ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Supports
 import { fetcher } from "@/lib/fetcher";
 import { useSearchBar } from "@/store/search-bar";
 import { useDebounce } from "@/hooks/use-debounce";
 
-// Interfaces
 import { DataResponseFetcher, IMovieList } from "@/lib/interfaces";
-
 import MoviesItems from "@/components/movies/movies-items";
 
 export default function Movies() {
@@ -34,7 +31,6 @@ export default function Movies() {
     const debouncedQuery = useDebounce(query, 500);
     const [datas, setDatas] = useState<IMovieList[]>([]);
 
-    // Fetch Data
     const {
         data,
         error,
@@ -48,106 +44,111 @@ export default function Movies() {
             fetcher<DataResponseFetcher>(
                 `/api/movies?search=${debouncedQuery}&page=${pageParam}&year=${yearsSelected}&type=${typeSelected}`
             ),
-        initialPageParam: 1, // ✅ WAJIB DI v5
+        initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
-            return lastPage.data.length > 0 ? allPages.length + 1 : undefined;
+            const loaded = allPages.flatMap((p) => p.data).length;
+            return loaded < (lastPage.total || 0) ? allPages.length + 1 : undefined;
         },
     });
 
     useEffect(() => {
         if (data?.pages) {
-            if ( query ) {
-                if ( !typeMovieAvailable || typeMovieAvailable?.length === 0 ) {
-                    const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];    
-                    const mappedTypes = uniqueTypes.map((e) => {
-                        return { label: `${e}`, value: `${e}` }
-                    })
-    
-                    setTypeMovieAvailable(mappedTypes)
+            if (query) {
+                if (!typeMovieAvailable || typeMovieAvailable.length === 0) {
+                    const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];
+                    setTypeMovieAvailable(uniqueTypes.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
                 }
-                
-                if ( !yearsMovieAvailable || yearsMovieAvailable?.length === 0 ) {
+
+                if (!yearsMovieAvailable || yearsMovieAvailable.length === 0) {
                     const uniqueYears = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Year))];
-                    const mappedYears = uniqueYears.map((e) => {
-                        return { label: `${e}`, value: `${e}` }
-                    })
-                    
-                    setYearsMovieAvailable(mappedYears)
-                }   
+                    setYearsMovieAvailable(uniqueYears.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
+                }
             }
 
-            const MappedData = data.pages.flatMap((page) => page.data)
-            const Total = data.pages.flatMap((page) => page.total)
+            const mapped = data.pages.flatMap((page) => page.data);
+            const totalVal = data.pages[0]?.total ?? 0;
 
-            setTotal(Number(Total) || 0);
-            setDatas(MappedData);
+            setTotal(Number(totalVal) || 0);
+            setDatas(mapped);
         }
     }, [data]);
 
-    useEffect(() => {
-        
-    }, [query, typeMovieAvailable, yearsMovieAvailable]);
-
     return (
-        <>
-            <div className="w-full flex justify-center items-center flex-wrap mb-6">
-                {
-                    total > 0 && (
-                        <>
-                            <span className="text-sm font-semibold mr-2">Result :</span>
-                            <span className="text-sm">{total}</span>
-                        </>
-                    )
-                }
-            </div>
-            {/* <section className="w-full min-h-screen max-w-5xl mx-auto bg-[#0c0a09] text-white px-4 py-4"> */}
-            {isLoading && !error && (
-                <div className="w-full h-[250px] flex justify-center items-center">
-                    <LoadingComponent type="icon" propsIcon={{ size: 50 }} />
+        <div className="w-full pb-12">
+            {/* Result count */}
+            {total > 0 && !isLoading && (
+                <div className="flex items-center gap-2 mb-5 px-1">
+                    <span className="text-sm text-muted-foreground">
+                        Found <span className="font-semibold text-foreground">{total.toLocaleString()}</span> results
+                        {debouncedQuery && <> for <span className="font-semibold text-foreground">&quot;{debouncedQuery}&quot;</span></>}
+                    </span>
                 </div>
             )}
 
-            {/* Masonry Layout */}
-            {!isLoading && !error && datas?.length > 0 && (
-                <div className="w-full min-h-auto mx-auto px-4 columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
+            {/* Loading skeleton */}
+            {isLoading && !error && (
+                <div className="w-full mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="break-inside-avoid mb-4">
+                            <Skeleton className={`w-full rounded-xl ${i % 3 === 0 ? "h-[260px]" : i % 2 === 0 ? "h-[200px]" : "h-[220px]"}`} />
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Masonry grid */}
+            {!isLoading && !error && datas.length > 0 && (
+                <div className="w-full mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
                     {datas.map((movie: IMovieList, index: number) => (
-                        <div
-                            key={index}
-                            className="break-inside-avoid w-full mb-4"
-                        >
+                        <div key={`${movie.imdbID}-${index}`} className="break-inside-avoid w-full mb-4">
                             <MoviesItems data={movie} />
                         </div>
                     ))}
                 </div>
             )}
 
-            {
-                !isLoading && (error || datas?.length === 0) && (
-                    <div className="w-full flex justify-center items-center">
-                        <span>No Result Found.</span>
+            {/* Empty state */}
+            {!isLoading && (error || datas.length === 0) && (
+                <div className="w-full h-[300px] flex flex-col gap-3 justify-center items-center text-muted-foreground">
+                    <Film className="w-12 h-12 opacity-30" />
+                    <div className="text-center">
+                        <p className="font-semibold text-foreground">No results found</p>
+                        <p className="text-sm mt-1">
+                            {debouncedQuery
+                                ? `We couldn't find anything for "${debouncedQuery}". Try a different search.`
+                                : "Start searching to discover movies and TV shows."}
+                        </p>
                     </div>
-                )
-            }
+                </div>
+            )}
 
-            {/* Load More Button */}
+            {/* Load More */}
             {hasNextPage && !error && (
-                <div className="w-full flex justify-center items-center mt-12">
+                <div className="w-full flex justify-center items-center mt-10">
                     <Button
                         onClick={() => fetchNextPage()}
-                        // className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-500"
-                        className="rounded text-xs hover:cursor-pointer"
-                        variant="default"
+                        variant="outline"
                         disabled={isFetchingNextPage}
+                        className="min-w-[140px] cursor-pointer gap-2"
                     >
                         {isFetchingNextPage ? (
-                            <LoadingComponent type="full" />
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Loading...
+                            </>
                         ) : (
                             "Load More"
                         )}
                     </Button>
                 </div>
             )}
-            {/* </section> */}
-        </>
+
+            {/* All loaded indicator */}
+            {!hasNextPage && !isLoading && datas.length > 0 && (
+                <div className="w-full flex justify-center mt-10">
+                    <span className="text-xs text-muted-foreground">All {total.toLocaleString()} results loaded</span>
+                </div>
+            )}
+        </div>
     );
 }

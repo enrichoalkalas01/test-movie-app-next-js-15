@@ -13,62 +13,68 @@ import { FormRegularInput } from "../generals/form-regular-input";
 import { useAuthStore } from "@/store/auth-store";
 import { useDialogStore } from "@/store/dialog-store";
 
+const schema = z.object({
+    username: z.string().min(1, "Username is required"),
+    password: z.string().min(1, "Password is required"),
+});
+
+type LoginFormData = z.infer<typeof schema>;
+
 export default function Login() {
     const { userRegistered, setAuthStatus, setUserData } = useAuthStore()
     const { setStatusDialog } = useDialogStore()
 
-    const schema = z.object({
-        username: z.string().nonempty("Username must be filled!"),
-        password: z.string().nonempty("Password must be filled!"),
-    });
-    
-    const form = useForm({
-        defaultValues: {
-            username: "",
-            password: "",
-        },
+    const form = useForm<LoginFormData>({
+        defaultValues: { username: "", password: "" },
         resolver: zodResolver(schema),
     });
 
-    const handleSubmit = (data: { username: string; password: string;}) => {
-        const users = userRegistered.filter((e: { username: string; password: string; }) => e.username === data.username)
-        if ( users?.length === 0 ) {
-            toast.error("user is not exist!", { position: "top-right" })
+    const handleSubmit = (data: LoginFormData) => {
+        const user = userRegistered.find(
+            (e) => e.username === data.username
+        );
+
+        if (!user) {
+            toast.error("User does not exist!", { position: "top-right" });
+            return;
         }
 
-        if ( users[0]?.password !== data.password ) {
-            toast.error("wrong username or password!", { position: "top-right" })
+        if (user.password !== data.password) {
+            toast.error("Wrong username or password!", { position: "top-right" });
+            return;
         }
 
-        setAuthStatus(true)
-        setUserData(users[0])
-        setStatusDialog(false)
-    }
+        setAuthStatus(true);
+        setUserData(user);
+        setStatusDialog(false);
+        toast.success("Welcome back!", { position: "top-right" });
+    };
 
-    return(
-        <>
-            <section className="w-full">
-                <WrapperForms form={form} onSubmitFunction={handleSubmit}>
-                    <div className="w-full mb-4 flex flex-col gap-y-4">
-                        <FormRegularInput
-                            form={form}
-                            labelName="Username"
-                            name="username"
-                        />
-                    </div>
-                    <div className="w-full mb-4 flex flex-col gap-y-4">
-                        <FormRegularInput
-                            form={form}
-                            labelName="Password"
-                            name="password"
-                            type="password"
-                        />
-                    </div>
-                    <div className="w-full">
-                        <Button variant="default" className="cursor-pointer">Submit</Button>
-                    </div>
-                </WrapperForms>
-            </section>
-        </>
+    return (
+        <section className="w-full">
+            <p className="text-xs text-muted-foreground mb-4">
+                Demo credentials: <span className="font-mono font-semibold text-foreground">admin / admin</span>
+            </p>
+            <WrapperForms form={form} onSubmitFunction={handleSubmit}>
+                <div className="flex flex-col gap-4 mb-5">
+                    <FormRegularInput
+                        form={form}
+                        labelName="Username"
+                        name="username"
+                        placeholder="Enter username"
+                    />
+                    <FormRegularInput
+                        form={form}
+                        labelName="Password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter password"
+                    />
+                </div>
+                <Button variant="default" type="submit" className="w-full cursor-pointer">
+                    Sign In
+                </Button>
+            </WrapperForms>
+        </section>
     )
 }

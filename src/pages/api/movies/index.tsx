@@ -23,7 +23,7 @@ const GetListMovies = async ({ req, res }: IPropsHandlerApi) => {
     const { search, page = 1, year, type } = req.query;
     try {
         const Query = search || "avengers";
-        let Url = `https://www.omdbapi.com/?apikey=be4d5abe&s=${Query}&page=${page}`;
+        let Url = `https://www.omdbapi.com/?apikey=${process.env.OMDB_API_KEY}&s=${Query}&page=${page}`;
 
         if (year) {
             Url += `&y=${year}`;

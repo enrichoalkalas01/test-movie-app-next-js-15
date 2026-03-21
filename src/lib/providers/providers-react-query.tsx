@@ -14,7 +14,7 @@ export default function ProvidersTanstackQuery({
 
     return (
         <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
             {children}
         </QueryClientProvider>
     );

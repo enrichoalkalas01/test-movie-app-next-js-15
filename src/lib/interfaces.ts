@@ -13,7 +13,7 @@ export interface DataResponseFetcher {
     lastPage?: {
         page?: number | null;
     };
-    data: Record<string, unknown>[];
+    data: IMovieList[];
 }
 
 export interface IMovieList {

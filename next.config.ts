@@ -1,9 +1,14 @@
 import type { NextConfig } from "next";
 
+const BASE_PATH = "/portofolio/show/test-movie-app-next-js-15";
+
 const nextConfig: NextConfig = {
-    /* config options here */
+    basePath: BASE_PATH,
     images: {
-        domains: ["storage.googleapis.com", "m.media-amazon.com"],
+        remotePatterns: [
+            { protocol: "https", hostname: "storage.googleapis.com" },
+            { protocol: "https", hostname: "m.media-amazon.com" },
+        ],
     },
 };
 

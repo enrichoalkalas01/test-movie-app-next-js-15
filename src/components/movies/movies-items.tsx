@@ -1,12 +1,17 @@
 "use client";
 
-// Library
 import Image from "next/image";
+import Link from "next/link";
+import { Film, Tv, BookOpen } from "lucide-react";
 
-// Interfaces
 import { IMovieList } from "@/lib/interfaces";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+
+const typeIcon: Record<string, React.ReactNode> = {
+    movie: <Film className="w-3 h-3" />,
+    series: <Tv className="w-3 h-3" />,
+    episode: <BookOpen className="w-3 h-3" />,
+};
 
 export default function MoviesItems({
     data,
@@ -15,68 +20,65 @@ export default function MoviesItems({
 }: {
     data: IMovieList;
     index?: number;
-    type?: "image" | "background",
-    propsTitle?: Record<string, unknown>
+    type?: "image" | "background";
+    propsTitle?: Record<string, unknown>;
 }) {
-    console.log(data)
+    const posterSrc = data.Poster && data.Poster !== "N/A" ? data.Poster : "/image.png";
+    const icon = data.Type ? typeIcon[data.Type.toLowerCase()] : typeIcon.movie;
+
     return (
-        <>
-            <section className="w-full h-full relative group rounded">
-                {/* Image */}
-                {
-                    type === "image" && (
-                        <>
-                            <div className="w-full">
-                                <Image
-                                    src={`${
-                                        data.Poster !== "N/A" ? data.Poster : "/image.png"
-                                    }`}
-                                    alt={`${data.Poster !== "N/A" ? data.Title : ""}`}
-                                    width={1000}
-                                    height={1000}
-                                    className="rounded-sm"
-                                />
-                            </div>
-                        </>
-                    )
-                }
+        <Link href={`/movie/${data?.imdbID}`} className="block w-full h-full">
+            <section className="w-full h-full relative group rounded-xl overflow-hidden cursor-pointer">
+                {/* Image type */}
+                {type === "image" && (
+                    <Image
+                        src={posterSrc}
+                        alt={data.Title || "Movie poster"}
+                        width={400}
+                        height={600}
+                        className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                )}
 
-                {
-                    type === "background" && (
-                        <>
-                            <div className="w-full h-full rounded">
-                                <div
-                                    className="w-full h-full bg-image rounded"
-                                    style={{
-                                        backgroundImage: `url('${data.Poster !== "N/A" ? data.Poster : "/image.png"}')`,
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
-                                        backgroundRepeat: "no-repeat",
-                                    }}
-                                ></div>
-                            </div>
-                        </>
-                    )
-                }
+                {/* Background type */}
+                {type === "background" && (
+                    <div
+                        className="w-full h-full absolute inset-0"
+                        style={{
+                            backgroundImage: `url('${posterSrc}')`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                        }}
+                    />
+                )}
 
-                <div className="w-full h-full absolute top-0 left-0 bg-gradient-to-b from-transparent to-black/80 group-hover:cursor-pointer rounded">
-                    <Link href={`/movie/${data?.imdbID}`}>
-                        <div className="w-full h-full relative rounded">
-                            <div className="w-full flex p-2">
-                                <div className="bg-black rounded text-xs text-white font-semibold w-auto p-2 group-hover:text-yellow-400 duration-250 ease-in-out">
-                                    {data.Year}
-                                </div>
-                            </div>
-                            <div className={cn(
-                                "w-full rounded absolute bottom-0 text-center py-4 px-6 text-white group-hover:text-yellow-400 bg-gradient-to-b from-transparent to-black duration-250 ease-in-out font-semibold",
-                                propsTitle.className as string,
-                            )}>
-                                <span className="shadow-md">{data.Title}</span>
-                            </div>
-                        </div>
-                    </Link>
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent">
+                    {/* Top badges */}
+                    <div className="absolute top-2 left-2 flex gap-1.5">
+                        {data.Year && (
+                            <span className="bg-black/70 backdrop-blur-sm rounded px-2 py-0.5 text-xs text-white font-semibold group-hover:text-yellow-400 transition-colors">
+                                {data.Year}
+                            </span>
+                        )}
+                        {data.Type && (
+                            <span className="bg-black/70 backdrop-blur-sm rounded px-2 py-0.5 text-xs text-white/80 flex items-center gap-1 capitalize">
+                                {icon}
+                                {data.Type}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Title at bottom */}
+                    <div className={cn(
+                        "absolute bottom-0 left-0 right-0 px-3 py-3 text-white font-semibold text-sm group-hover:text-yellow-400 transition-colors duration-200 leading-snug",
+                        propsTitle.className as string,
+                    )}>
+                        {data.Title}
+                    </div>
                 </div>
             </section>
-        </>
+        </Link>
     );
 }
