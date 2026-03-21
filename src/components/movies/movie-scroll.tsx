@@ -32,7 +32,7 @@ export default function MoviesScroll() {
         queryKey: ["movies", searchQuery],
         queryFn: ({ pageParam }) =>
             fetcher<DataResponseFetcher>(
-                `/api/movies?search=${searchQuery}&page=${pageParam}`
+                `/portofolio/show/test-movie-app-next-js-15/api/movies?search=${searchQuery}&page=${pageParam}`,
             ),
         initialPageParam: 1, // ✅ WAJIB DI v5
         getNextPageParam: (lastPage, allPages) => {
@@ -53,7 +53,7 @@ export default function MoviesScroll() {
                     fetchNextPage();
                 }
             },
-            { threshold: 1.0 }
+            { threshold: 1.0 },
         );
 
         if (loadMoreRef.current) observer.observe(loadMoreRef.current);

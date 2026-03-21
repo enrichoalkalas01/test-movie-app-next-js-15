@@ -25,7 +25,7 @@ export default function Movies() {
         typeSelected,
         total,
         setTotal,
-    } = useSearchBar()
+    } = useSearchBar();
 
     const debouncedQuery = useDebounce(query, 500);
     const [datas, setDatas] = useState<IMovieList[]>([]);
@@ -41,12 +41,14 @@ export default function Movies() {
         queryKey: ["movies", debouncedQuery, yearsSelected, typeSelected],
         queryFn: ({ pageParam }) =>
             fetcher<DataResponseFetcher>(
-                `/api/movies?search=${debouncedQuery}&page=${pageParam}&year=${yearsSelected}&type=${typeSelected}`
+                `/portofolio/show/test-movie-app-next-js-15/api/movies?search=${debouncedQuery}&page=${pageParam}&year=${yearsSelected}&type=${typeSelected}`,
             ),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             const loaded = allPages.flatMap((p) => p.data).length;
-            return loaded < (lastPage.total || 0) ? allPages.length + 1 : undefined;
+            return loaded < (lastPage.total || 0)
+                ? allPages.length + 1
+                : undefined;
         },
     });
 
@@ -54,18 +56,34 @@ export default function Movies() {
         if (!data?.pages) return;
 
         if (query && typeMovieAvailable.length === 0) {
-            const uniqueTypes = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Type))];
-            setTypeMovieAvailable(uniqueTypes.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
+            const uniqueTypes = [
+                ...new Set(
+                    data.pages[0].data.map((item: IMovieList) => item.Type),
+                ),
+            ];
+            setTypeMovieAvailable(
+                uniqueTypes
+                    .filter(Boolean)
+                    .map((e) => ({ label: `${e}`, value: `${e}` })),
+            );
         }
 
         if (query && yearsMovieAvailable.length === 0) {
-            const uniqueYears = [...new Set(data.pages[0].data.map((item: IMovieList) => item.Year))];
-            setYearsMovieAvailable(uniqueYears.filter(Boolean).map((e) => ({ label: `${e}`, value: `${e}` })));
+            const uniqueYears = [
+                ...new Set(
+                    data.pages[0].data.map((item: IMovieList) => item.Year),
+                ),
+            ];
+            setYearsMovieAvailable(
+                uniqueYears
+                    .filter(Boolean)
+                    .map((e) => ({ label: `${e}`, value: `${e}` })),
+            );
         }
 
         setTotal(Number(data.pages[0]?.total) || 0);
         setDatas(data.pages.flatMap((page) => page.data));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     return (
@@ -74,8 +92,20 @@ export default function Movies() {
             {total > 0 && !isLoading && (
                 <div className="flex items-center gap-2 mb-5 px-1">
                     <span className="text-sm text-muted-foreground">
-                        Found <span className="font-semibold text-foreground">{total.toLocaleString()}</span> results
-                        {debouncedQuery && <> for <span className="font-semibold text-foreground">&quot;{debouncedQuery}&quot;</span></>}
+                        Found{" "}
+                        <span className="font-semibold text-foreground">
+                            {total.toLocaleString()}
+                        </span>{" "}
+                        results
+                        {debouncedQuery && (
+                            <>
+                                {" "}
+                                for{" "}
+                                <span className="font-semibold text-foreground">
+                                    &quot;{debouncedQuery}&quot;
+                                </span>
+                            </>
+                        )}
                     </span>
                 </div>
             )}
@@ -85,7 +115,9 @@ export default function Movies() {
                 <div className="w-full mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <div key={i} className="break-inside-avoid mb-4">
-                            <Skeleton className={`w-full rounded-xl ${i % 3 === 0 ? "h-[260px]" : i % 2 === 0 ? "h-[200px]" : "h-[220px]"}`} />
+                            <Skeleton
+                                className={`w-full rounded-xl ${i % 3 === 0 ? "h-[260px]" : i % 2 === 0 ? "h-[200px]" : "h-[220px]"}`}
+                            />
                         </div>
                     ))}
                 </div>
@@ -95,7 +127,10 @@ export default function Movies() {
             {!isLoading && !error && datas.length > 0 && (
                 <div className="w-full mx-auto columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
                     {datas.map((movie: IMovieList, index: number) => (
-                        <div key={`${movie.imdbID}-${index}`} className="break-inside-avoid w-full mb-4">
+                        <div
+                            key={`${movie.imdbID}-${index}`}
+                            className="break-inside-avoid w-full mb-4"
+                        >
                             <MoviesItems data={movie} />
                         </div>
                     ))}
@@ -107,7 +142,9 @@ export default function Movies() {
                 <div className="w-full h-[300px] flex flex-col gap-3 justify-center items-center text-muted-foreground">
                     <Film className="w-12 h-12 opacity-30" />
                     <div className="text-center">
-                        <p className="font-semibold text-foreground">No results found</p>
+                        <p className="font-semibold text-foreground">
+                            No results found
+                        </p>
                         <p className="text-sm mt-1">
                             {debouncedQuery
                                 ? `We couldn't find anything for "${debouncedQuery}". Try a different search.`
@@ -141,7 +178,9 @@ export default function Movies() {
             {/* All loaded indicator */}
             {!hasNextPage && !isLoading && datas.length > 0 && (
                 <div className="w-full flex justify-center mt-10">
-                    <span className="text-xs text-muted-foreground">All {total.toLocaleString()} results loaded</span>
+                    <span className="text-xs text-muted-foreground">
+                        All {total.toLocaleString()} results loaded
+                    </span>
                 </div>
             )}
         </div>
