@@ -20,7 +20,7 @@ import { fetcher } from "@/lib/fetcher"
 export default function FeaturedSlider() {
     const { data, error, isLoading } = useQuery<DataResponseFetcher>({
         queryKey: ["featured-movies"],
-        queryFn: () => fetcher<DataResponseFetcher>("/api/movies?search=james bond"),
+        queryFn: () => fetcher<DataResponseFetcher>("/portofolio/show/test-movie-app-next-js-15/api/movies?search=james bond"),
         staleTime: 5 * 60 * 1000,
     });
 
